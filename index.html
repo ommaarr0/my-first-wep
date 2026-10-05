@@ -43,41 +43,49 @@
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
             position: absolute;
-            transition: all 0.1s ease-out;
+            /* بنحط مكان مبدئي للزرار في النص */
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.15s ease-out;
         }
     </style>
 </head>
 <body>
 
     <h1>تحدي الذكاء! 😈</h1>
-    <p>لو تقدر، اضغط على الزرار ده واثبت إنك أذكى من الموقع!</p>
+    <p id="msg">لو تقدر، اضغط على الزرار ده!</p>
 
-    <button id="runawayBtn">اضغط هنا لو تقدر!</button>
+    <button id="runawayBtn">اضغط هنا لو تقدر</button>
 
     <script>
         const btn = document.getElementById('runawayBtn');
+        const msg = document.getElementById('msg');
 
-        function moveButton() {
-            // حساب المساحة المتاحة للشاشة بالموبايل
+        function moveButton(e) {
+            if(e) e.preventDefault(); // منع الضغط الحقيقي
+
+            // حساب أبعاد الشاشة عشان مايطلعش بره
             const padding = 30;
             const maxX = window.innerWidth - btn.offsetWidth - padding;
             const maxY = window.innerHeight - btn.offsetHeight - padding;
 
-            // توليد أماكن عشوائية بس جوه حدود الشاشة تماماً
             const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
-            const randomY = Math.max(150, Math.floor(Math.random() * maxY)); // 150 عشان مايدخلش في الكلام اللي فوق
+            const randomY = Math.max(160, Math.floor(Math.random() * maxY));
 
+            // إلغاء الـ transform عشان الإحداثيات الجديدة تشتغل صح
+            btn.style.transform = 'none';
             btn.style.left = randomX + 'px';
             btn.style.top = randomY + 'px';
+
+            msg.innerText = "هههههه قربت! بس مش هتلحقني! 🏃‍♂️";
         }
 
-        // أول ما الماوس يقرب أو الشاشة تتلمس، يهرب فوراً
-        btn.addEventListener('mouseover', moveButton);
-        btn.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-            moveButton();
-        });
+        // يهرب أول ما يحاول يضغط عليه (سواء بالماوس أو لمس الموبايل)
+        btn.addEventListener('click', moveButton);
+        btn.addEventListener('touchstart', moveButton);
     </script>
 
 </body>
 </html>
+ 

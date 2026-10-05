@@ -3,56 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>موقعي الشخصي الأول</title>
-    <link rel="stylesheet" href="style.css">
+    <title>تحدي الزرار الهارب</title>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden; /* عشان الزرار ميطلعش بره حدود الشاشة ويعمل سكرول */
+            text-align: center;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        h1 {
+            color: #38bdf8;
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #94a3b8;
+            font-size: 16px;
+            margin-bottom: 40px;
+        }
+
+        /* الزرار هيكون Absolute عشان نقريك نغير مكانه بحرية في الشاشة */
+        #runawayBtn {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #ffffff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+            position: absolute;
+            transition: 0.15s ease-out; /* حركة سريعة وناعمة */
+        }
+    </style>
 </head>
 <body>
-    <div class="card">
-        <h1>مرحباً بك في موقعي!</h1>
-        <p>أنا أتعلم البرمجة خطوة بخطوة وأقوم ببناء هذا الموقع بنفسي من الصفر.</p>
-        <button class="btn" id="magicBtn">اضغط لمفاجأة المستر! ✨</button>
-    </div>
 
-    <!-- عنصر الصوت التفاعلي -->
-    <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto"></audio>
-
-    <script>
-        const btn = document.getElementById('magicBtn');
-        const sound = document.getElementById('clickSound');
-
-        btn.addEventListener('click', function(e) {
-            // إعادة ضبط الصوت وتشغيله مع كل ضغطة
-            sound.currentTime = 0;
-            sound.play().catch(err => console.log('Audio play blocked', err));
-
-            // إنشاء الإيموجي المتحرك
-            createEmoji(e.clientX, e.clientY);
-        });
-
-        function createEmoji(x, y) {
-            const emojis = ['⭐', '🚀', '🔥', '💡', '🎉'];
-            const emoji = document.createElement('div');
-            emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-            emoji.style.position = 'fixed';
-            emoji.style.left = (x || window.innerWidth / 2) + 'px';
-            emoji.style.top = (y || window.innerHeight / 2) + 'px';
-            emoji.style.fontSize = '32px';
-            emoji.style.pointerEvents = 'none';
-            emoji.style.transition = 'all 0.8s ease-out';
-            emoji.style.zIndex = '9999';
-            
-            document.body.appendChild(emoji);
-
-            setTimeout(() => {
-                emoji.style.transform = 'translateY(-100px) scale(1.6)';
-                emoji.style.opacity = '0';
-            }, 50);
-
-            setTimeout(() => {
-                emoji.remove();
-            }, 900);
-        }
-    </script>
-</body>
-</html>
-
+    <div class="container">
+        <h1>تحدي الذكاء! 😈

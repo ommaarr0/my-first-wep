@@ -13,7 +13,7 @@ body {
     background-color: #1e293b;
     padding: 30px;
     border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
     text-align: center;
     max-width: 400px;
     width: 90%;
@@ -35,16 +35,18 @@ p {
 
 .btn {
     display: inline-block;
-    background-color: #38bdf8;
-    color: #0f172a;
-    padding: 12px 24px;
-    border-radius: 8px;
-    text-decoration: none;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #ffffff;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 10px;
+    font-size: 16px;
     font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.btn:hover {
-    background-color: #0ea5e9;
-    transform: translateY(-2px);
+.btn:active {
+    transform: scale(0.95);
 }

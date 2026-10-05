@@ -10,7 +10,48 @@
     <div class="card">
         <h1>مرحباً بك في موقعي!</h1>
         <p>أنا أتعلم البرمجة خطوة بخطوة وأقوم ببناء هذا الموقع بنفسي من الصفر.</p>
-        <a href="https://github.com/ommaarr0" target="_blank" class="btn">زوروا مستودعي على GitHub</a>
+        <button class="btn" id="magicBtn">اضغط لمفاجأة المستر!</button>
     </div>
+
+    <!-- عنصر الصوت التفاعلي -->
+    <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+
+    <script>
+        const btn = document.getElementById('magicBtn');
+        const sound = document.getElementById('clickSound');
+
+        btn.addEventListener('click', function(e) {
+            // تشغيل الصوت
+            sound.currentTime = 0;
+            sound.play().catch(err => console.log('Audio play blocked', err));
+
+            // إنشاء إيموجي متحرك (نجوم أو قلوب)
+            createEmoji(e.clientX, e.clientY);
+        });
+
+        function createEmoji(x, y) {
+            const emojis = ['⭐', '🚀', '🔥', '💡', '🎉'];
+            const emoji = document.createElement('div');
+            emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            emoji.style.position = 'fixed';
+            emoji.style.left = (x || window.innerWidth / 2) + 'px';
+            emoji.style.top = (y || window.innerHeight / 2) + 'px';
+            emoji.style.fontSize = '28px';
+            emoji.style.pointerEvents = 'none';
+            emoji.style.transition = 'all 0.8s ease-out';
+            emoji.style.zIndex = '9999';
+            
+            document.body.appendChild(emoji);
+
+            setTimeout(() => {
+                emoji.style.transform = 'translateY(-80px) scale(1.5)';
+                emoji.style.opacity = '0';
+            }, 50);
+
+            setTimeout(() => {
+                emoji.remove();
+            }, 900);
+        }
+    </script>
 </body>
 </html>

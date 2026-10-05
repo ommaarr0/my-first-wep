@@ -10,16 +10,14 @@
             color: #f8fafc;
             font-family: Arial, sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            overflow: hidden; /* عشان الزرار ميطلعش بره حدود الشاشة ويعمل سكرول */
+            overflow: hidden;
             text-align: center;
-        }
-
-        .container {
-            padding: 20px;
+            position: relative;
         }
 
         h1 {
@@ -34,7 +32,6 @@
             margin-bottom: 40px;
         }
 
-        /* الزرار هيكون Absolute عشان نقريك نغير مكانه بحرية في الشاشة */
         #runawayBtn {
             background: linear-gradient(135deg, #ef4444, #dc2626);
             color: #ffffff;
@@ -46,11 +43,41 @@
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
             position: absolute;
-            transition: 0.15s ease-out; /* حركة سريعة وناعمة */
+            transition: all 0.1s ease-out;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>تحدي الذكاء! 😈
+    <h1>تحدي الذكاء! 😈</h1>
+    <p>لو تقدر، اضغط على الزرار ده واثبت إنك أذكى من الموقع!</p>
+
+    <button id="runawayBtn">اضغط هنا لو تقدر!</button>
+
+    <script>
+        const btn = document.getElementById('runawayBtn');
+
+        function moveButton() {
+            // حساب المساحة المتاحة للشاشة بالموبايل
+            const padding = 30;
+            const maxX = window.innerWidth - btn.offsetWidth - padding;
+            const maxY = window.innerHeight - btn.offsetHeight - padding;
+
+            // توليد أماكن عشوائية بس جوه حدود الشاشة تماماً
+            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(150, Math.floor(Math.random() * maxY)); // 150 عشان مايدخلش في الكلام اللي فوق
+
+            btn.style.left = randomX + 'px';
+            btn.style.top = randomY + 'px';
+        }
+
+        // أول ما الماوس يقرب أو الشاشة تتلمس، يهرب فوراً
+        btn.addEventListener('mouseover', moveButton);
+        btn.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            moveButton();
+        });
+    </script>
+
+</body>
+</html>

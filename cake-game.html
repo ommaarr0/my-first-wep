@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مخبز الأميرات السحري | لعبة أختي الصورة</title>
+    <style>
+        :root {
+            --bg-color: #1a102f;
+            --card-bg: #2d1b4e;
+            --accent-color: #ff758c;
+            --secondary-color: #ff7eb3;
+            --text-color: #fff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-color), #431f4f);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 500px;
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            border: 3px solid var(--accent-color);
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 12px;
+            margin: 15px 0;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .stat-item span {
+            color: #ffd700;
+        }
+
+        /* منطقة تجهيز الكيك الواقعية */
+        .kitchen-board {
+            background: #fff;
+            color: #333;
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 15px;
+            box-shadow: inset 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .customer-order {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #d63384;
+        }
+
+        .cake-display {
+            font-size: 4rem;
+            margin: 10px 0;
+            transition: 0.3s;
+            animation: bounce 1s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-8px); }
+        }
+
+        /* أزرار المكونات */
+        .ingredients-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .ingredient-btn {
+            background: linear-gradient(135deg, #ff758c, #ff7eb3);
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 4px 10px rgba(255, 117, 140, 0.4);
+        }
+
+        .ingredient-btn:active {
+            transform: scale(0.95);
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .message {
+            margin-top: 10px;
+            font-size: 0.95rem;
+            min-height: 25px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1>🎂 مخبز الأميرات السحري 👑</h1>
+        <p style="font-size: 0.85rem; color: #d1c4e9;">صنعت خصيصاً لأجمل أميرة في الدنيا بواسطة أخوها المهندس!</p>
+
+        <div class="stats-bar">
+            <div class="stat-item">النقاط: <span id="score">0</span> 🌟</div>
+            <div class="stat-item">الوقت: <span id="timer">30</span> ثانية ⏱️</div>
+        </div>
+
+        <div class="kitchen-board">
+            <div class="customer-order" id="orderText">اضغطي ابدأ اللعبة لتلقي أول طلب!</div>
+            <div class="cake-display" id="cakeIcon">🍰</div>
+            <div class="message" id="gameMsg">متاحة وجاهزة للبدء...</div>
+        </div>
+
+        <div class="ingredients-grid" id="controlsGrid" style="display: none;">
+            <button class="ingredient-btn" onclick="selectIngredient('قاعدة كيك')">🍞 كيك</button>
+            <button class="ingredient-btn" onclick="selectIngredient('شوكولاتة')">🍫 شوكولاتة</button>
+            <button class="ingredient-btn" onclick="selectIngredient('فراولة')">🍓 فراولة</button>
+            <button class="ingredient-btn" onclick="selectIngredient('كريمة')">🧁 كريمة</button>
+            <button class="ingredient-btn" onclick="selectIngredient('شموع')">🕯️ شموع</button>
+            <button class="ingredient-btn" onclick="serveOrder()" style="background: linear-gradient(135deg, #ffc107, #ff9800);">🚀 تقديم</button>
+        </div>
+
+        <button class="start-btn" id="startBtn" onclick="startGame()">ابدأ اللعبة الآن! 🎮</button>
+    </div>
+
+    <script>
+        let score = 0;
+        let timeLeft = 30;
+        let gameInterval;
+        let currentOrder = [];
+        let playerSelection = [];
+        
+        const recipes = [
+            { name: "كيك شوكولاتة بالفراولة", items: ["قاعدة كيك", "شوكولاتة", "فراولة"], icon: "🎂" },
+            { name: "تورته كريمة بالشموع", items: ["قاعدة كيك", "كريمة", "شموع"], icon: "🧁" },
+            { name: "كيك فاخر بالكريمة والفراولة", items: ["قاعدة كيك", "كريمة", "فراولة"], icon: "🍰" }
+        ];
+
+        let targetRecipe = null;
+
+        function startGame() {
+            score = 0;
+            timeLeft = 30;
+            document.getElementById("score").innerText = score;
+            document.getElementById("startBtn").style.display = "none";
+            document.getElementById("controlsGrid").style.display = "grid";
+            
+            nextOrder();
+            
+            gameInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById("timer").innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(gameInterval);
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function nextOrder() {
+            playerSelection = [];
+            targetRecipe = recipes[Math.floor(Math.random() * recipes.length)];
+            document.getElementById("orderText").innerText = "الطلب المطلوب: " + targetRecipe.name;
+            document.getElementById("cakeIcon").innerText = targetRecipe.icon;
+            document.getElementById("gameMsg").innerText = "قومي بتجميع المكونات بالترتيب الصحيح!";
+            document.getElementById("gameMsg").style.color = "#333";
+        }
+
+        function selectIngredient(item) {
+            if (timeLeft <= 0) return;
+            playerSelection.push(item);
+            document.getElementById("gameMsg").innerText = "المكونات المضافة: " + playerSelection.join(" + ");
+        }
+
+        function serveOrder() {
+            if (timeLeft <= 0) return;
+            
+            // التحقق من مطابقة المكونات
+            let isMatch = targetRecipe.items.length === playerSelection.length &&
+                          targetRecipe.items.every((val, index) => val === playerSelection[index]);
+
+            if (isMatch) {
+                score += 10;
+                document.getElementById("score").innerText = score;
+                document.getElementById("gameMsg").innerText = "ممتاز جداً! طلب صحيح وبطولة 🌟";
+                document.getElementById("gameMsg").style.color = "green";
+                setTimeout(nextOrder, 1000);
+            } else {
+                document.getElementById("gameMsg").innerText = "خطأ في المكونات! جربي مرة أخرى ❌";
+                document.getElementById("gameMsg").style.color = "red";
+                playerSelection = [];
+            }
+        }
+
+        function endGame() {
+            document.getElementById("controlsGrid").style.display = "none";
+            document.getElementById("startBtn").style.display = "block";
+            document.getElementById("startBtn").innerText = "العب مرة أخرى! 🔄";
+            document.getElementById("orderText").innerText = "انتهى الوقت يا بطلة!";
+            document.getElementById("cakeIcon").innerText = "🏆";
+            document.getElementById("gameMsg").innerText = "النتيجة النهائية: " + score + " نقطة! كفو عليكي!";
+        }
+    </script>
+
+</body>
+</html>

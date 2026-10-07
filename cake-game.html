@@ -63,7 +63,7 @@
             color: #ffd700;
         }
 
-        /* منطقة تجهيز الكيك الواقعية والمرئية */
+        /* منطقة تجهيز الكيك المتكاملة */
         .kitchen-board {
             background: #fff;
             color: #333;
@@ -85,36 +85,17 @@
             color: #d63384;
         }
 
-        /* حاوية الكيك المتراكم لتغيير الشكل بالواقع */
-        .cake-assembly {
-            display: flex;
-            flex-direction: column-reverse;
-            align-items: center;
-            justify-content: center;
-            min-height: 110px;
-            margin: 5px 0;
+        /* كيكة واحدة رئيسية يتغير شكلها وتتفاعل مع المكونات */
+        .single-cake-display {
+            font-size: 4.5rem;
+            margin: 15px 0;
             transition: all 0.3s ease;
+            animation: pulseCake 0.5s ease-in-out;
         }
 
-        .layer {
-            font-size: 2.2rem;
-            animation: popIn 0.3s ease-in-out;
-            margin-top: -15px;
-        }
-
-        .layer:first-child {
-            margin-top: 0;
-        }
-
-        @keyframes popIn {
-            0% { transform: scale(0); opacity: 0; }
-            80% { transform: scale(1.1); opacity: 1; }
+        @keyframes pulseCake {
+            0% { transform: scale(0.8); opacity: 0.5; }
             100% { transform: scale(1); opacity: 1; }
-        }
-
-        .default-cake-icon {
-            font-size: 3.5rem;
-            color: #ccc;
         }
 
         /* أزرار المكونات */
@@ -166,7 +147,7 @@
 
     <div class="game-container">
         <h1>🎂 مخبز الأميرات السحري 👑</h1>
-        <p style="font-size: 0.8rem; color: #d1c4e9;">زيني الكيكة خطوة بخطوة وأسعدي أميرتك الصغيرة!</p>
+        <p style="font-size: 0.8rem; color: #d1c4e9;">شاهد الكيكة تتغير وتكتمل أمام عينيك!</p>
 
         <div class="stats-bar">
             <div class="stat-item">النقاط: <span id="score">0</span> 🌟</div>
@@ -176,20 +157,18 @@
         <div class="kitchen-board">
             <div class="customer-order" id="orderText">اضغطي ابدأ اللعبة لتلقي الطلب!</div>
             
-            <!-- شكل الكيك التفاعلي -->
-            <div class="cake-assembly" id="cakeAssembly">
-                <div class="default-cake-icon" id="basePlaceholder">🥮</div>
-            </div>
+            <!-- كيكة واحدة رئيسية يتغير شكلها حسب المكونات المضافة -->
+            <div class="single-cake-display" id="mainCakeIcon">🥮</div>
 
             <div class="message" id="gameMsg">جاهزة للبدء...</div>
         </div>
 
         <div class="ingredients-grid" id="controlsGrid" style="display: none;">
-            <button class="ingredient-btn" onclick="addIngredient('قاعدة كيك', '🍞')">🍞 كيك</button>
-            <button class="ingredient-btn" onclick="addIngredient('شوكولاتة', '🍫')">🍫 شوكولاتة</button>
-            <button class="ingredient-btn" onclick="addIngredient('فراولة', '🍓')">🍓 فراولة</button>
-            <button class="ingredient-btn" onclick="addIngredient('كريمة', '🧁')">🧁 كريمة</button>
-            <button class="ingredient-btn" onclick="addIngredient('شموع', '🕯️')">🕯️ شموع</button>
+            <button class="ingredient-btn" onclick="addIngredient('قاعدة كيك')">🍞 كيك</button>
+            <button class="ingredient-btn" onclick="addIngredient('شوكولاتة')">🍫 شوكولاتة</button>
+            <button class="ingredient-btn" onclick="addIngredient('فراولة')">🍓 فراولة</button>
+            <button class="ingredient-btn" onclick="addIngredient('كريمة')">🧁 كريمة</button>
+            <button class="ingredient-btn" onclick="addIngredient('شموع')">🕯️ شموع</button>
             <button class="ingredient-btn" onclick="serveOrder()" style="background: linear-gradient(135deg, #ffc107, #ff9800);">🚀 تقديم</button>
         </div>
 
@@ -202,12 +181,11 @@
         let gameInterval;
         let targetRecipe = null;
         let playerSelectionNames = [];
-        let playerSelectionIcons = [];
 
         const recipes = [
-            { name: "كيك شوكولاتة بالفراولة", items: ["قاعدة كيك", "شوكولاتة", "فراولة"] },
-            { name: "تورته كريمة بالشموع", items: ["قاعدة كيك", "كريمة", "شموع"] },
-            { name: "كيك فاخر بالكريمة والفراولة", items: ["قاعدة كيك", "كريمة", "فراولة"] }
+            { name: "كيك شوكولاتة بالفراولة", items: ["قاعدة كيك", "شوكولاتة", "فراولة"], icon: "🎂" },
+            { name: "تورته كريمة بالشموع", items: ["قاعدة كيك", "كريمة", "شموع"], icon: "🧁" },
+            { name: "كيك فاخر بالكريمة والفراولة", items: ["قاعدة كيك", "كريمة", "فراولة"], icon: "🍰" }
         ];
 
         function startGame() {
@@ -231,43 +209,49 @@
 
         function nextOrder() {
             playerSelectionNames = [];
-            playerSelectionIcons = [];
-            
-            // اختيار وصفة عشوائية جديدة تماماً في كل مرة
             targetRecipe = recipes[Math.floor(Math.random() * recipes.length)];
+            
             document.getElementById("orderText").innerText = "الطلب المطلوب: " + targetRecipe.name;
-            document.getElementById("gameMsg").innerText = "أضيفي المكونات بالترتيب الظاهر في الطلب!";
+            document.getElementById("gameMsg").innerText = "أضيفي المكونات الصحيحة لتحويل الكيكة!";
             document.getElementById("gameMsg").style.color = "#333";
             
-            updateCakeVisual();
+            // بداية الكيكة فارغة أو قاعدة أساسية
+            document.getElementById("mainCakeIcon").innerText = "🥮";
         }
 
-        function addIngredient(name, icon) {
+        function addIngredient(name) {
             if (timeLeft <= 0) return;
             
             playerSelectionNames.push(name);
-            playerSelectionIcons.push(icon);
             
-            updateCakeVisual();
+            // تحديث شكل الكيكة الواحدة بناءً على الوصفة الحالية أو المكونات المضافة
+            updateIntegratedCakeVisual();
             document.getElementById("gameMsg").innerText = "تمت إضافة: " + name;
         }
 
-        function updateCakeVisual() {
-            const assembly = document.getElementById("cakeAssembly");
-            assembly.innerHTML = "";
+        function updateIntegratedCakeVisual() {
+            const cakeElement = document.getElementById("mainCakeIcon");
+            
+            // تحقق إذا كانت المكونات مطابقة تماماً لأي وصفة من الوصفات، اعرض الأيقونة الخاصة بها مباشرة في الكيكة
+            let matchedRecipe = recipes.find(r => 
+                r.items.length === playerSelectionNames.length &&
+                r.items.every((val, index) => val === playerSelectionNames[index])
+            );
 
-            if (playerSelectionIcons.length === 0) {
-                assembly.innerHTML = '<div class="default-cake-icon">🥮</div>';
-                return;
+            if (matchedRecipe) {
+                cakeElement.innerText = matchedRecipe.icon;
+            } else {
+                // لو لسه في طور التجهيز، اعرض أيقونة تفاعلية متغيرة
+                if (playerSelectionNames.includes("شموع")) {
+                    cakeElement.innerText = "🎂";
+                } else if (playerSelectionNames.includes("كريمة")) {
+                    cakeElement.innerText = "🧁";
+                } else if (playerSelectionNames.includes("شوكولاتة")) {
+                    cakeElement.innerText = "🍰";
+                } else {
+                    cakeElement.innerText = "🍞";
+                }
             }
-
-            // عرض كل طبقة مكون اختارته البطلة فوق بعضه
-            playerSelectionIcons.forEach(icon => {
-                const layerDiv = document.createElement("div");
-                layerDiv.className = "layer";
-                layerDiv.innerText = icon;
-                assembly.appendChild(layerDiv);
-            });
         }
 
         function serveOrder() {
@@ -279,16 +263,15 @@
             if (isMatch) {
                 score += 10;
                 document.getElementById("score").innerText = score;
-                document.getElementById("gameMsg").innerText = "رائع جداً! طلب صحيح وممتاز 🌟";
+                document.getElementById("mainCakeIcon").innerText = "✨ " + targetRecipe.icon + " ✨";
+                document.getElementById("gameMsg").innerText = "ممتاز جداً! الكيكة جاهزة ومثالية 🌟";
                 document.getElementById("gameMsg").style.color = "green";
-                setTimeout(nextOrder, 1200);
+                setTimeout(nextOrder, 1400);
             } else {
-                document.getElementById("gameMsg").innerText = "خطأ في المكونات أو الترتيب! أعيدي المحاولة ❌";
+                document.getElementById("gameMsg").innerText = "خطأ في المكونات! أعيدي المحاولة ❌";
                 document.getElementById("gameMsg").style.color = "red";
-                // إعادة تعيين طبقات الكيك لتتغير وجاهزة للتجربة الجديدة
                 playerSelectionNames = [];
-                playerSelectionIcons = [];
-                updateCakeVisual();
+                document.getElementById("mainCakeIcon").innerText = "🥮";
             }
         }
 
@@ -297,10 +280,7 @@
             document.getElementById("startBtn").style.display = "block";
             document.getElementById("startBtn").innerText = "العب مرة أخرى! 🔄";
             document.getElementById("orderText").innerText = "انتهى الوقت يا بطلة!";
-            
-            const assembly = document.getElementById("cakeAssembly");
-            assembly.innerHTML = '<div class="default-cake-icon">🏆</div>';
-            
+            document.getElementById("mainCakeIcon").innerText = "🏆";
             document.getElementById("gameMsg").innerText = "النتيجة النهائية: " + score + " نقطة! أداء عظيم!";
         }
     </script>
